@@ -183,7 +183,7 @@ const Homepage = () => {
           <div className="hero-content">
             <div className="hero-text">
               <div className="hero-badge">
-                <span>✨ Established in 1995</span>
+                <span>Established in 1995</span>
               </div>
   
               <h1 className="hero-title">
