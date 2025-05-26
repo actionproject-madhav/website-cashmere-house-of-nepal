@@ -5,15 +5,18 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
-CORS(app)
+
+# Update CORS to handle preflight requests properly
+CORS(app, 
+     origins=["http://localhost:3000", "https://website-cashmere-house-of-nepal-frontend-b3rr.onrender.com/"],
+     allow_headers=["Content-Type"],
+     methods=["GET", "POST", "OPTIONS"])
 
 # Database configuration
-
 basedir = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(basedir, 'instance', 'database.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 print("Database absolute path:", db_path)
 
 
