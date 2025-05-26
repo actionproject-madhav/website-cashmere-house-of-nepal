@@ -42,6 +42,12 @@ with app.app_context():
     db.create_all()
 
 # API routes
+
+@app.route('/')
+def home():
+    return "Welcome to the API. Try the endpoints under /api/ ..."
+
+
 @app.route('/api/contact', methods=['POST'])
 def contact():
     try:
