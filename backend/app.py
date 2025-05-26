@@ -3,6 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 import os
+import csv
+from io import StringIO
+
 
 app = Flask(__name__)
 
@@ -161,6 +164,218 @@ def get_subscribers():
         'subscribers': subscriber_list,
         'total': len(subscriber_list)
     })
+
+
+@app.route('/inquiries', methods=['GET'])
+def view_inquiries():
+    inquiries = Inquiry.query.order_by(Inquiry.timestamp.desc()).all()
+    
+    html = '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Customer Inquiries</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+            .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            h1 { color: #333; border-bottom: 3px solid #007bff; padding-bottom: 10px; }
+            .stats { background: #007bff; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th { background-color: #007bff; color: white; padding: 12px 8px; text-align: left; font-weight: bold; }
+            td { padding: 10px 8px; border-bottom: 1px solid #ddd; }
+            tr:nth-child(even) { background-color: #f8f9fa; }
+            tr:hover { background-color: #e8f4fd; }
+            .status { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+            .status-new { background-color: #28a745; color: white; }
+            .status-pending { background-color: #ffc107; color: black; }
+            .status-completed { background-color: #6c757d; color: white; }
+            .message-cell { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .timestamp { font-size: 12px; color: #666; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Customer Inquiries Dashboard</h1>
+            <div class="stats">
+                <strong>Total Inquiries: ''' + str(len(inquiries)) + '''</strong>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Product Interest</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+    '''
+    
+    for inquiry in inquiries:
+        status_class = f"status-{inquiry.status.lower() if inquiry.status else 'new'}"
+        html += f'''
+                    <tr>
+                        <td>{inquiry.id}</td>
+                        <td><strong>{inquiry.name or 'N/A'}</strong></td>
+                        <td>{inquiry.email or 'N/A'}</td>
+                        <td>{inquiry.phone or 'N/A'}</td>
+                        <td>{inquiry.subject or 'N/A'}</td>
+                        <td class="message-cell" title="{inquiry.message or 'N/A'}">{(inquiry.message or 'N/A')[:50]}{'...' if inquiry.message and len(inquiry.message) > 50 else ''}</td>
+                        <td>{inquiry.product_interest or 'N/A'}</td>
+                        <td class="timestamp">{inquiry.timestamp.strftime('%Y-%m-%d %H:%M') if inquiry.timestamp else 'N/A'}</td>
+                        <td><span class="status {status_class}">{inquiry.status or 'New'}</span></td>
+                    </tr>
+        '''
+    
+    html += '''
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>
+    '''
+    
+    return html
+
+@app.route('/subscribers', methods=['GET'])
+def view_subscribers():
+    subscribers = Subscriber.query.order_by(Subscriber.timestamp.desc()).all()
+    
+    html = '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Email Subscribers</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }
+            .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            h1 { color: #333; border-bottom: 3px solid #28a745; padding-bottom: 10px; }
+            .stats { background: #28a745; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; text-align: center; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th { background-color: #28a745; color: white; padding: 12px; text-align: left; font-weight: bold; }
+            td { padding: 12px; border-bottom: 1px solid #ddd; }
+            tr:nth-child(even) { background-color: #f8f9fa; }
+            tr:hover { background-color: #e8f5e8; }
+            .status { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+            .status-active { background-color: #28a745; color: white; }
+            .status-inactive { background-color: #dc3545; color: white; }
+            .timestamp { font-size: 12px; color: #666; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Email Subscribers Dashboard</h1>
+            <div class="stats">
+                <strong>Total Subscribers: ''' + str(len(subscribers)) + '''</strong>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email Address</th>
+                        <th>Subscription Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+    '''
+    
+    for subscriber in subscribers:
+        status_class = f"status-{subscriber.status.lower() if subscriber.status else 'active'}"
+        html += f'''
+                    <tr>
+                        <td>{subscriber.id}</td>
+                        <td><strong>{subscriber.email}</strong></td>
+                        <td class="timestamp">{subscriber.timestamp.strftime('%Y-%m-%d %H:%M') if subscriber.timestamp else 'N/A'}</td>
+                        <td><span class="status {status_class}">{subscriber.status or 'Active'}</span></td>
+                    </tr>
+        '''
+    
+    html += '''
+                </tbody>
+            </table>
+        </div>
+    </body>
+    </html>
+    '''
+    
+    return html
+
+# Optional: Dashboard overview route
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    inquiries_count = Inquiry.query.count()
+    subscribers_count = Subscriber.query.count()
+    recent_inquiries = Inquiry.query.order_by(Inquiry.timestamp.desc()).limit(5).all()
+    
+    html = f'''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Business Dashboard</title>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 20px; background-color: #f5f5f5; }}
+            .container {{ max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
+            h1 {{ color: #333; text-align: center; border-bottom: 3px solid #007bff; padding-bottom: 10px; }}
+            .stats-grid {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }}
+            .stat-card {{ background: linear-gradient(135deg, #007bff, #0056b3); color: white; padding: 20px; border-radius: 8px; text-align: center; }}
+            .stat-number {{ font-size: 2em; font-weight: bold; }}
+            .stat-label {{ font-size: 1.1em; margin-top: 5px; }}
+            .quick-links {{ margin: 30px 0; text-align: center; }}
+            .btn {{ display: inline-block; padding: 12px 24px; margin: 0 10px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }}
+            .btn:hover {{ background: #0056b3; }}
+            .recent {{ margin-top: 30px; }}
+            .recent h3 {{ color: #333; border-bottom: 2px solid #28a745; padding-bottom: 5px; }}
+            .recent-item {{ padding: 10px; border-left: 4px solid #007bff; margin: 10px 0; background: #f8f9fa; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Business Dashboard</h1>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{inquiries_count}</div>
+                    <div class="stat-label">Total Inquiries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{subscribers_count}</div>
+                    <div class="stat-label">Email Subscribers</div>
+                </div>
+            </div>
+            
+            <div class="quick-links">
+                <a href="/inquiries" class="btn">View All Inquiries</a>
+                <a href="/subscribers" class="btn">View All Subscribers</a>
+            </div>
+            
+            <div class="recent">
+                <h3>Recent Inquiries</h3>
+    '''
+    
+    for inquiry in recent_inquiries:
+        html += f'''
+                <div class="recent-item">
+                    <strong>{inquiry.name or 'Anonymous'}</strong> - {inquiry.subject or 'No subject'}<br>
+                    <small>{inquiry.timestamp.strftime('%Y-%m-%d %H:%M') if inquiry.timestamp else 'N/A'}</small>
+                </div>
+        '''
+    
+    html += '''
+            </div>
+        </div>
+    </body>
+    </html>
+    '''
+    
+    return html
 
 
 if __name__ == '__main__':
