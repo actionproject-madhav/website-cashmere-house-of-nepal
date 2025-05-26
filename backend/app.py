@@ -175,10 +175,29 @@ def get_subscribers():
     })
 
 # New HTML table routes for business clients
+from datetime import datetime
+from flask import render_template_string
+
+# New HTML table routes for business clients
 @app.route('/inquiries', methods=['GET'])
 def view_inquiries():
     try:
         inquiries = Inquiry.query.order_by(Inquiry.timestamp.desc()).all()
+        
+        # Process timestamps to ensure they're properly formatted
+        for inquiry in inquiries:
+            if inquiry.timestamp:
+                if isinstance(inquiry.timestamp, str):
+                    try:
+                        # Convert string to datetime if needed
+                        inquiry.formatted_timestamp = datetime.strptime(inquiry.timestamp, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
+                    except:
+                        inquiry.formatted_timestamp = inquiry.timestamp  # Use as-is if parsing fails
+                else:
+                    # It's already a datetime object
+                    inquiry.formatted_timestamp = inquiry.timestamp.strftime('%Y-%m-%d %H:%M')
+            else:
+                inquiry.formatted_timestamp = 'N/A'
         
         inquiries_html_template = '''
 <!DOCTYPE html>
@@ -234,7 +253,7 @@ def view_inquiries():
                     <td>{{ inquiry.subject or 'N/A' }}</td>
                     <td class="message-cell">{{ (inquiry.message or 'N/A')[:100] }}{% if inquiry.message and inquiry.message|length > 100 %}...{% endif %}</td>
                     <td>{{ inquiry.product_interest or 'N/A' }}</td>
-                    <td class="timestamp">{% if inquiry.timestamp %}{{ inquiry.timestamp.strftime('%Y-%m-%d %H:%M') }}{% else %}N/A{% endif %}</td>
+                    <td class="timestamp">{{ inquiry.formatted_timestamp }}</td>
                     <td><span class="status status-{{ (inquiry.status or 'new')|lower }}">{{ inquiry.status or 'New' }}</span></td>
                 </tr>
                 {% endfor %}
@@ -254,6 +273,21 @@ def view_inquiries():
 def view_subscribers():
     try:
         subscribers = Subscriber.query.order_by(Subscriber.timestamp.desc()).all()
+        
+        # Process timestamps to ensure they're properly formatted
+        for subscriber in subscribers:
+            if subscriber.timestamp:
+                if isinstance(subscriber.timestamp, str):
+                    try:
+                        # Convert string to datetime if needed
+                        subscriber.formatted_timestamp = datetime.strptime(subscriber.timestamp, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
+                    except:
+                        subscriber.formatted_timestamp = subscriber.timestamp  # Use as-is if parsing fails
+                else:
+                    # It's already a datetime object
+                    subscriber.formatted_timestamp = subscriber.timestamp.strftime('%Y-%m-%d %H:%M')
+            else:
+                subscriber.formatted_timestamp = 'N/A'
         
         subscribers_html_template = '''
 <!DOCTYPE html>
@@ -297,7 +331,7 @@ def view_subscribers():
                 <tr>
                     <td>{{ subscriber.id }}</td>
                     <td><strong>{{ subscriber.email }}</strong></td>
-                    <td class="timestamp">{% if subscriber.timestamp %}{{ subscriber.timestamp.strftime('%Y-%m-%d %H:%M') }}{% else %}N/A{% endif %}</td>
+                    <td class="timestamp">{{ subscriber.formatted_timestamp }}</td>
                     <td><span class="status status-{{ (subscriber.status or 'active')|lower }}">{{ subscriber.status or 'Active' }}</span></td>
                 </tr>
                 {% endfor %}
@@ -319,6 +353,21 @@ def dashboard():
         inquiries_count = Inquiry.query.count()
         subscribers_count = Subscriber.query.count()
         recent_inquiries = Inquiry.query.order_by(Inquiry.timestamp.desc()).limit(5).all()
+        
+        # Process timestamps for recent inquiries
+        for inquiry in recent_inquiries:
+            if inquiry.timestamp:
+                if isinstance(inquiry.timestamp, str):
+                    try:
+                        # Convert string to datetime if needed
+                        inquiry.formatted_timestamp = datetime.strptime(inquiry.timestamp, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M')
+                    except:
+                        inquiry.formatted_timestamp = inquiry.timestamp  # Use as-is if parsing fails
+                else:
+                    # It's already a datetime object
+                    inquiry.formatted_timestamp = inquiry.timestamp.strftime('%Y-%m-%d %H:%M')
+            else:
+                inquiry.formatted_timestamp = 'N/A'
         
         dashboard_html_template = '''
 <!DOCTYPE html>
@@ -366,7 +415,7 @@ def dashboard():
             {% for inquiry in recent_inquiries %}
             <div class="recent-item">
                 <strong>{{ inquiry.name or 'Anonymous' }}</strong> - {{ inquiry.subject or 'No subject' }}<br>
-                <small>{% if inquiry.timestamp %}{{ inquiry.timestamp.strftime('%Y-%m-%d %H:%M') }}{% else %}N/A{% endif %}</small>
+                <small>{{ inquiry.formatted_timestamp }}</small>
             </div>
             {% endfor %}
         </div>
@@ -382,7 +431,6 @@ def dashboard():
     
     except Exception as e:
         return f"Error loading dashboard: {str(e)}", 500
-
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
