@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # Update CORS to handle preflight requests properly
 CORS(app, 
-     origins=["http://localhost:3000", "https://website-cashmere-house-of-nepal-frontend-b3rr.onrender.com/"],
+     origins=["http://localhost:3000", "https://website-cashmere-house-of-nepal-frontend-b3rr.onrender.com"],
      allow_headers=["Content-Type"],
      methods=["GET", "POST", "OPTIONS"])
 
