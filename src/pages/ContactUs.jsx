@@ -32,8 +32,8 @@ const ContactUs = () => {
     try {
       console.log('Form data being sent:', formData);
       
-      // Try with full URL if your backend runs on different port
-      const response = await fetch('http://localhost:5000/api/contact', {
+      // Updated to use your Render backend URL
+      const response = await fetch('https://website-cashmere-house-of-nepal.onrender.com/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,6 @@ const ContactUs = () => {
       setIsSubmitting(false);
     }
   };
-
   const toggleFAQ = (index) => {
     setOpenFAQ(openFAQ === index ? null : index);
   };
