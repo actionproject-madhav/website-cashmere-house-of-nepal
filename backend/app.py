@@ -129,42 +129,8 @@ def subscribe_newsletter():
         'subscriber_id': new_subscriber.id
     })
 
-@app.route('/api/inquiries', methods=['GET'])
-def get_inquiries():
-    inquiries = Inquiry.query.order_by(Inquiry.timestamp.desc()).all()
-    inquiry_list = [{
-        'id': i.id,
-        'name': i.name,
-        'email': i.email,
-        'phone': i.phone,
-        'subject': i.subject,
-        'message': i.message,
-        'product_interest': i.product_interest,
-        'timestamp': i.timestamp,
-        'status': i.status
-    } for i in inquiries]
 
-    return jsonify({
-        'success': True,
-        'inquiries': inquiry_list,
-        'total': len(inquiry_list)
-    })
 
-@app.route('/api/subscribers', methods=['GET'])
-def get_subscribers():
-    subscribers = Subscriber.query.order_by(Subscriber.timestamp.desc()).all()
-    subscriber_list = [{
-        'id': s.id,
-        'email': s.email,
-        'timestamp': s.timestamp,
-        'status': s.status
-    } for s in subscribers]
-
-    return jsonify({
-        'success': True,
-        'subscribers': subscriber_list,
-        'total': len(subscriber_list)
-    })
 
 
 # Add this import at the top of your file if not already present
