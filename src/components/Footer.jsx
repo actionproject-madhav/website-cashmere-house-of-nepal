@@ -40,7 +40,7 @@ const Footer = () => {
     setSubscribeMessage('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/newsletter', {
+      const response = await fetch('https://website-cashmere-house-of-nepal.onrender.com/api/newsletter', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
