@@ -241,31 +241,7 @@ const Footer = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="footer-bottom-content">
-            <div className="copyright">
-              <p>&copy; {new Date().getFullYear()} Cashmere House of Nepal. All rights reserved.</p>
-              <p>Crafting luxury since 1995</p>
-            </div>
-            
-            <div className="footer-badges">
-              <div className="badge">
-                <span className="badge-icon">🏔️</span>
-                <span>Himalayan Heritage</span>
-              </div>
-              <div className="badge">
-                <span className="badge-icon">🤲</span>
-                <span>Handcrafted</span>
-              </div>
-              <div className="badge">
-                <span className="badge-icon">🌿</span>
-                <span>Ethically Sourced</span>
-              </div>
-              <div className="badge">
-                <span className="badge-icon">💎</span>
-                <span>Premium Quality</span>
-              </div>
-            </div>
-          </div>
+          
         </motion.div>
 
         {/* Scroll to Top Button */}
