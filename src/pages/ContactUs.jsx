@@ -462,7 +462,7 @@ const ContactUs = () => {
               <div className="map-overlay">
                 <div className="map-info">
                   <h3>📍 Cashmere House of Nepal</h3>
-                  <p>Arahiti, Balaju 16, Kathmandu, Nepal</p>
+                  <p>Bhagawati Marg, Kathmandu 44600</p>
                   <motion.button 
                     className="btn btn-secondary"
                     whileHover={{ scale: 1.05 }}
