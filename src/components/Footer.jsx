@@ -153,24 +153,24 @@ const Footer = () => {
             <h3>Contact Information</h3>
             <div className="contact-info">
               <div className="contact-item">
-                <span className="contact-icon">📍</span>
+                <span className="contact-icon"></span>
                 <div>
                   <p>Cashmere House of Nepal</p>
-                  <p>Arahiti, Balaju 16</p>
+                  <p>Bhagwati Marg</p>
                   <p>Kathmandu, Nepal</p>
                 </div>
               </div>
               
               <div className="contact-item">
-                <span className="contact-icon">📞</span>
+                <span className="contact-icon"></span>
                 <div>
-                  <p>Phone: 00977-1-4880107</p>
-                  <p>Fax: 00977-1-4880461</p>
+                  <p>Phone: +977 9851030301</p>
+                  <p></p>
                 </div>
               </div>
               
               <div className="contact-item">
-                <span className="contact-icon">✉️</span>
+                <span className="contact-icon"></span>
                 <div>
                   <p>chofnepal@gmail.com</p>
                   <p>nepalsachin1@gmail.com</p>
@@ -178,7 +178,7 @@ const Footer = () => {
               </div>
               
               <div className="contact-item">
-                <span className="contact-icon">🌐</span>
+                <span className="contact-icon"></span>
                 <div>
                   <p>www.cashmerehouseofnepal.com</p>
                 </div>

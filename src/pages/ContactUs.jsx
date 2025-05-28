@@ -74,24 +74,23 @@ const ContactUs = () => {
 
   const contactInfo = [
     {
-      icon: '📍',
+      icon: '',
       title: 'Visit Our Workshop',
       details: [
         'Cashmere House of Nepal',
-        'Arahiti, Balaju 16',
+        'Bhagwati Marg',
         'Kathmandu, Nepal'
       ]
     },
     {
-      icon: '📞',
+      icon: '',
       title: 'Call Us',
       details: [
-        'Phone: +977-1-4880107',
-        'Fax: +977-1-4880461'
+        'Phone: +977 9851030301'
       ]
     },
     {
-      icon: '✉️',
+      icon: '',
       title: 'Email Us',
       details: [
         'chofnepal@gmail.com',
@@ -99,7 +98,7 @@ const ContactUs = () => {
       ]
     },
     {
-      icon: '🌐',
+      icon: '',
       title: 'Website',
       details: [
         'www.cashmerehouseofnepal.com'
@@ -121,7 +120,7 @@ const ContactUs = () => {
   const faqData = [
     {
       question: 'What is your minimum order quantity?',
-      answer: 'We welcome both small and large orders. For individual pieces, there is no minimum. For wholesale orders, we typically require a minimum of 10 pieces per design. Please contact us to discuss your specific requirements.'
+      answer: 'We welcome both small and large orders. For individual pieces, there is no minimum. For wholesale orders, we typically require a minimum of 30 pieces per design. You can choose between any 5 colors. Please contact us to discuss your specific requirements.'
     },
     {
       question: 'Do you offer custom colors and sizes?',
@@ -461,7 +460,7 @@ const ContactUs = () => {
               <img src="/contact/location.png" alt="Map to Cashmere House of Nepal" />
               <div className="map-overlay">
                 <div className="map-info">
-                  <h3>📍 Cashmere House of Nepal</h3>
+                  <h3> Cashmere House of Nepal</h3>
                   <p>Bhagawati Marg, Kathmandu 44600</p>
                   <motion.button 
                     className="btn btn-secondary"
