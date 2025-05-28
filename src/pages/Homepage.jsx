@@ -319,7 +319,7 @@ const Homepage = () => {
             <div className={`info-visual ${isVisible.company ? 'visible' : ''}`}>
               <div className="info-image-container">
                 <div className="info-image-placeholder">
-                  <img src="/homepage.png" alt="Company Info" />
+                  <img src="/home1.png" alt="Company Info" />
                 </div>
               </div>
             </div>
