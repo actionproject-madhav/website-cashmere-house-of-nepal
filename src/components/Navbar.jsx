@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+import LoginButton from './LoginButton';
+import SignupButton from './SignupButton';
+import LogoutButton from './LogoutButton';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, user, isLoading } = useAuth0();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -65,8 +70,36 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Right Spacer (for balance) */}
-        <div className="spacer-section"></div>
+        {/* Right Auth Section */}
+        <div className="spacer-section" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {isLoading ? (
+            <div style={{ fontSize: '14px', color: '#666' }}>Loading...</div>
+          ) : isAuthenticated ? (
+            <>
+              <Link 
+                to="/profile" 
+                style={{ 
+                  color: '#333', 
+                  textDecoration: 'none',
+                  fontSize: '14px',
+                  padding: '5px 10px',
+                  borderRadius: '4px',
+                  transition: 'background-color 0.3s'
+                }}
+                onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}
+                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                {user?.name || 'Profile'}
+              </Link>
+              <LogoutButton />
+            </>
+          ) : (
+            <>
+              <LoginButton />
+              <SignupButton />
+            </>
+          )}
+        </div>
       </div>
 
       {/* Middle Navigation Menu */}
@@ -81,6 +114,14 @@ const Navbar = () => {
               {item.name}
             </Link>
           ))}
+          {isAuthenticated && (
+            <Link
+              to="/profile"
+              className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
+            >
+              My Account
+            </Link>
+          )}
         </div>
       </div>
 
@@ -99,6 +140,26 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            {isAuthenticated && (
+              <Link
+                to="/profile"
+                className={`dropdown-link ${location.pathname === '/profile' ? 'active' : ''}`}
+                onClick={handleNavClick}
+              >
+                My Account
+              </Link>
+            )}
+            {/* Auth buttons in mobile menu */}
+            <div style={{ borderTop: '1px solid #eee', paddingTop: '10px', marginTop: '10px' }}>
+              {!isAuthenticated ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <LoginButton />
+                  <SignupButton />
+                </div>
+              ) : (
+                <LogoutButton />
+              )}
+            </div>
           </div>
         </>
       )}
