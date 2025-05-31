@@ -81,7 +81,7 @@ const Profile = () => {
   }
 
   return (
-    <div style={{ marginTop: '30px' , padding: '100px 20px', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ marginTop: '50px' , padding: '100px 20px', maxWidth: '600px', margin: '0 auto' }}>
       <h1>My Profile</h1>
       
       <div style={{ marginTop: '30px' }}>
