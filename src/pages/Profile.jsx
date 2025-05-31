@@ -85,20 +85,6 @@ const Profile = () => {
       <h1>My Profile</h1>
       
       <div style={{ marginTop: '30px' }}>
-        {user?.picture && (
-          <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-            <img 
-              src={user.picture} 
-              alt="Profile" 
-              style={{ 
-                width: '80px', 
-                height: '80px', 
-                borderRadius: '50%',
-                border: '2px solid #ddd'
-              }} 
-            />
-          </div>
-        )}
         
         <div style={{ marginBottom: '20px' }}>
           <strong>Name:</strong> {user?.name || 'Not provided'}
