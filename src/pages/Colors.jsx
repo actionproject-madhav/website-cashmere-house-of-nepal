@@ -288,9 +288,6 @@ const Colors = () => {
                 Request Custom Color
               </motion.button>
             </div>
-            <div className="custom-color-image">
-              <img src="/nehicus/0B5A0625.jpg" alt="Custom Color Process" />
-            </div>
           </motion.div>
         </div>
       </section>
