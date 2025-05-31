@@ -7,7 +7,7 @@ const LogoutButton = () => {
 
   return (
     <button 
-      onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+      onClick={() => logout({ logoutParams: { returnTo: window.location.origin + '/home'  } })}
       style={{
         padding: '8px 16px',
         backgroundColor: '#dc3545',

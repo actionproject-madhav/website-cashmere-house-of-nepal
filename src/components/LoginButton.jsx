@@ -6,7 +6,10 @@ const LoginButton = () => {
 
   return (
     <button 
-      onClick={() => loginWithRedirect()}
+      onClick={() => loginWithRedirect({
+        appState: { returnTo: '/home'}
+      }
+      )}
       style={{
         padding: '8px 16px',
         backgroundColor: '#333',

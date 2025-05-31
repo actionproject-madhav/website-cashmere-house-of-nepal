@@ -81,8 +81,12 @@ const Profile = () => {
   }
 
   return (
-    <div style={{ marginTop: '50px' , padding: '100px 20px', maxWidth: '600px', margin: '0 auto' }}>
-      <h1>My Profile</h1>
+    <div style={{   marginTop: '60px',
+      marginLeft: 'auto',
+      marginRight: 'auto',        // Use individual margin properties
+      padding: '100px 20px', 
+      maxWidth: '600px'}}>
+      <h1> My Profile</h1>
       
       <div style={{ marginTop: '30px' }}>
         
