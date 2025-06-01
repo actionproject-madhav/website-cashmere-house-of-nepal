@@ -7,11 +7,12 @@ const Auth0ProviderWithHistory = ({ children }) => {
 
   const domain = import.meta.env.VITE_AUTH0_DOMAIN;
   const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
-  const redirectUri = import.meta.env.VITE_AUTH0_REDIRECT_URI || `${window.location.origin}/callback`;
+  
+  // Use current origin instead of hardcoded URL
+  const redirectUri = window.location.origin;
 
   const onRedirectCallback = (appState) => {
-    // Redirect to the profile page after successful login, or to the intended page
-    navigate(appState?.returnTo || '/profile');
+    navigate(appState?.returnTo || '/');
   };
 
   if (!(domain && clientId)) {
@@ -22,7 +23,7 @@ const Auth0ProviderWithHistory = ({ children }) => {
         <ul style={{ textAlign: 'left', display: 'inline-block' }}>
           <li>VITE_AUTH0_DOMAIN: {domain ? '✓' : '✗'}</li>
           <li>VITE_AUTH0_CLIENT_ID: {clientId ? '✓' : '✗'}</li>
-          <li>VITE_AUTH0_REDIRECT_URI: {redirectUri}</li>
+          <li>REDIRECT_URI: {redirectUri}</li>
         </ul>
       </div>
     );
@@ -33,13 +34,9 @@ const Auth0ProviderWithHistory = ({ children }) => {
       domain={domain}
       clientId={clientId}
       authorizationParams={{
-        redirect_uri: redirectUri,
-        audience: `https://${domain}/api/v2/`,
-        scope: "openid profile email"
+        redirect_uri: redirectUri
       }}
       onRedirectCallback={onRedirectCallback}
-      useRefreshTokens={true}
-      cacheLocation="localstorage"
     >
       {children}
     </Auth0Provider>
